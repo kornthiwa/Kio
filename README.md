@@ -13,7 +13,15 @@ Kio/
   scripts/
     install.ps1      # Windows (PowerShell)
     install.sh       # macOS / Linux (bash)
+
+# ในโปรเจกต์ที่ติดตั้งแล้ว (workspace root — ไม่ใช่ในโฟลเดอร์ Kio เอง)
+note/YYYY-MM-DD/
+  ba.brief.md
+  sa.spec.md
+  qa.status.md
 ```
+
+`use-ba` / `use-sa` / `use-qa` เซฟ note เองเสมอที่ workspace root; หลายงานวันเดียวใช้ `note/YYYY-MM-DD-{suffix}/`
 
 ## ปลายทางตอนติดตั้ง
 
@@ -59,6 +67,10 @@ Credit: by 9arm — จาก [thananon/9arm-skills](https://github.com/thananon
 Credit: by Cloudflare — จาก [cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill)
 
 - `security-audit-by-cloudflare`
+
+Kio
+
+- `use-ba` · `use-sa` · `use-qa`
 
 รายละเอียดใน [`skills/README.md`](./skills/README.md)
 

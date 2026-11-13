@@ -37,6 +37,30 @@ Skill เดียว แต่มีไฟล์ช่วยครบ (โด�
 - **ขอ audit / pen-test / รายงานเต็ม** → รัน workflow 6 เฟส (สำรวจ → ไล่ล่า → หักล้าง → บันทึก → ตรวจซ้ำ → รายงาน)  
 full audit หนัก: อยากได้ sub-agent + Node + sandbox ถ้ารันโค้ดเป้าหมาย
 
+## Bundled (Kio) — team roles
+
+ใช้ ID ร่วมกันทั้งสาย `US-n` / `US-n-ACk` ตอบเป็น template และ**เซฟเองเสมอ**ที่ **workspace root**:
+
+`note/YYYY-MM-DD/{ba.brief.md|sa.spec.md|qa.status.md}`  
+(วันเดียวหลายงาน → `note/YYYY-MM-DD-{suffix}/`)
+
+BA ต้องประกาศ `Note folder` ใน brief; SA/QA ใช้โฟลเดอร์นั้น — ถ้ามีหลายโฟลเดอร์วันเดียวกันให้ถาม ห้ามเดา; ประกาศ path ก่อนเขียนไฟล์
+
+### `use-ba` — ตอนคิดแบบ Business Analyst
+
+เก็บปัญหาธุรกิจ เขียน flow / User Story / Acceptance Criteria แล้วส่งต่อ SA–QA  
+เปิดใช้เมื่อพูดถึง BA, requirement, user story, acceptance criteria หรือให้คิดแบบ BA
+
+### `use-sa` — ตอนคิดแบบ System Analyst
+
+แปลง AC เป็น System Spec: ขอบเขตระบบ, data, API, NFR, ความเสี่ยง แล้วส่งต่อ Dev–QA  
+เปิดใช้เมื่อพูดถึง SA, system design, architecture, data flow, API หรือให้คิดแบบ SA
+
+### `use-qa` — ตอนคิดแบบ QA
+
+ไล่ AC→test, รายงาน bug พร้อม severity/priority แล้วให้คำแนะนำ Ship / No-ship  
+เปิดใช้เมื่อพูดถึง QA, test plan, test case, regression, bug report หรือให้คิดแบบ QA
+
 ## เพิ่ม skill เอง
 
 ```text
