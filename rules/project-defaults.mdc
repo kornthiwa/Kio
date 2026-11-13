@@ -1,13 +1,26 @@
 ---
-description: Baseline project defaults for any repo using Kio — scope, git safety, secrets, evidence before guesses
+description: Baseline project defaults for any repo using Kio — scope, code hygiene, git/secrets, DB/prod safety, evidence before guesses
 alwaysApply: true
 ---
 
 # Project defaults
 
 - Change only what the task needs. Do not refactor broadly unless asked.
+- Match existing patterns, naming, and file layout; do not invent a parallel architecture.
+- Do not edit unrelated files or do drive-by refactors.
+- Prefer existing libraries; do not add a dependency if the repo already covers the need.
+- Do not change public APIs or schemas without stating the impact.
+- Do not hardcode secrets or log credentials/PII.
+- Do not swallow errors with empty catch blocks.
 - Do not commit, push, amend, force-push, or change git config unless the user explicitly asks.
 - Never commit secrets (`.env`, credentials, tokens, private keys).
 - Read real files in the repo before concluding how something works. Do not invent APIs, paths, or owners.
 - If a decision is blocked by missing info, ask one short question instead of guessing.
 - Prefer the smallest clear fix over a large redesign.
+- Do not run destructive DB operations (DROP, TRUNCATE, delete-all, DB reset, irreversible migrate) unless the user explicitly asks.
+- Do not touch production or shared databases without explicit confirmation.
+- Prefer existing migration workflows; do not invent or rewrite migration history.
+- Do not deploy, release, or apply infra to production/shared environments unless the user explicitly asks.
+- Do not use production credentials, kube contexts, or connection strings unless the user explicitly confirms that target.
+- Do not flush caches, purge queues, or bulk-delete object storage unless the user explicitly asks.
+- Do not publish packages/images or trigger user-facing side effects (email, SMS, payments, key rotation) against real systems unless asked.

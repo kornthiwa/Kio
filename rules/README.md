@@ -7,7 +7,7 @@
 
 | Rule | Scope |
 |------|--------|
-| `project-defaults.mdc` | `alwaysApply: true` — ขอบเขตงาน, ความปลอดภัย git/secrets, อ่านก่อนเดา |
+| `project-defaults.mdc` | `alwaysApply: true` — ขอบเขตงาน, code hygiene, git/secrets, DB/prod safety, อ่านก่อนเดา |
 | `kio-source-of-truth.mdc` | `alwaysApply: true` — แก้ที่ `Kio/` ไม่ใช่แค่สำเนา `.cursor`/`.claude` |
 | `note-lookback.mdc` | `alwaysApply: true` — path `note/`, frontmatter, `manifest.json`, schema, ห้ามเดาโฟลเดอร์ |
 
