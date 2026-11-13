@@ -1,0 +1,21 @@
+---
+description: Persist BA/SA/QA lookback notes under workspace-root note/ with frontmatter and manifest.json
+alwaysApply: true
+---
+
+# Note lookback
+
+- BA / SA / QA deliverables are saved under the **workspace root** (folder that contains `Kio/` and `AGENTS.md`), not under `Kio/` unless that is the workspace root.
+- Paths:
+  - `note/YYYY-MM-DD/ba.brief.md`
+  - `note/YYYY-MM-DD/sa.spec.md`
+  - `note/YYYY-MM-DD/qa.status.md`
+  - `note/YYYY-MM-DD/manifest.json`
+- Same day, another topic → `note/YYYY-MM-DD-{suffix}/`
+- Always declare **Note folder** and announce that path **before** writing files.
+- If multiple topic folders exist for today, ask which one — do not guess.
+- Role skills (`use-ba` / `use-sa` / `use-qa`) persist automatically; do not wait for the user to say “save”.
+- Each role markdown file **must** include YAML frontmatter: `topic`, `date`, `role`, `status`, `us_ids`, `note_folder` (QA also `recommendation` when known). Shape: `templates/note/frontmatter.schema.json`.
+- Each topic folder **must** keep an up-to-date `manifest.json` (merge role entries; never wipe other roles; preserve `recommendation` and unknown keys). Shape: `templates/note/manifest.schema.json`.
+- Future readers (`summarize-notes`, search/scripts) should prefer `manifest.json` + frontmatter, then fall back to reading the markdown bodies.
+- Optional health check: `scripts/validate-notes.ps1` / `validate-notes.sh` (add `-StrictFrontmatter` / `strict` to check role YAML).

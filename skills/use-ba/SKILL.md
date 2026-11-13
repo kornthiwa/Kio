@@ -3,8 +3,11 @@ name: use-ba
 description: >-
   Work as a Business Analyst. Clarify business needs, flows, User Stories, and
   Acceptance Criteria; produce handoff-ready BA outputs with stable US/AC IDs.
-  Use when the user says BA, Business Analyst, requirement, user story,
-  acceptance criteria, or asks to think like a BA.
+  Use when the user says BA, Business Analyst, /use-ba, requirement, requirement
+  gathering, user story, acceptance criteria, or asks to think like a BA
+  (including Thai: วิเคราะห์ธุรกิจ, ความต้องการ, ยูสเซอร์สตอรี่). Do not use for
+  system/API/architecture design (use-sa), test plans/bugs/ship decisions (use-qa),
+  or production coding.
 ---
 
 # use-ba — Business Analyst
@@ -19,6 +22,7 @@ Core question: **What does the business need?**
 3. **Don't silently guess.** Unknown → `TBD` + open question.
 4. **Always persist** the filled brief to the note path (Quick and Deep). Do not wait for the user to ask.
 5. **Declare `Note folder` in the brief** and **announce that path before writing** any file.
+6. **Confirm only when blocked.** If the problem is too vague to draft even one Must AC, ask one short clarifying question first. Otherwise draft the brief (mark `status: draft` if unconfirmed) and persist — do not stall on chat confirmation.
 
 ## Persist notes (lookback)
 
@@ -36,12 +40,55 @@ Notes live at the **workspace root** (the folder that contains `Kio/`, `AGENTS.m
 3. Same topic today → overwrite the same folder/file
 4. Put the chosen folder in the brief as `Note folder:` (required)
 
+### Note metadata (required for future expand)
+
+Keep this block aligned with `use-sa` / `use-qa` and `templates/note/`.
+
+**`status`:** `draft` = incomplete or unconfirmed; `ready` = handoff-quality for stated mode; `blocked` = cannot progress without answers.  
+**`tldr`:** one factual line (≤140 chars); no speculation.
+
+Every saved markdown file starts with YAML frontmatter:
+
+```yaml
+---
+topic: <kebab or empty>
+date: YYYY-MM-DD
+role: ba
+status: draft | ready | blocked
+us_ids: [US-1]
+note_folder: note/YYYY-MM-DD or note/YYYY-MM-DD-suffix
+---
+```
+
+Also create/update `manifest.json` in the same folder (**merge**; do not wipe other roles; **preserve** `recommendation` and unknown keys):
+
+```json
+{
+  "$schema": "../../templates/note/manifest.schema.json",
+  "topic": "",
+  "date": "YYYY-MM-DD",
+  "note_folder": "note/...",
+  "updated_at": "<ISO-8601>",
+  "us_ids": ["US-1"],
+  "roles": {
+    "ba": { "file": "ba.brief.md", "status": "draft" },
+    "sa": { "file": "sa.spec.md", "status": null },
+    "qa": { "file": "qa.status.md", "status": null }
+  },
+  "tldr": "<one line>",
+  "recommendation": null
+}
+```
+
+`$schema` may be omitted or point at the installed copy under `templates/note/manifest.schema.json`. Prefer US-n IDs in `us_ids`; empty array is OK for consults without BA stories.
+
 ### Write steps
 
 1. Announce: `Note folder: note/...` (before write)
 2. Create directories as needed
-3. Write `ba.brief.md`
-4. Confirm saved path in one short line after the template
+3. Write `ba.brief.md` **with frontmatter** + body template
+4. Create/update `manifest.json` (set `roles.ba`, `us_ids`, `tldr`, `updated_at`; keep other roles + `recommendation`)
+5. Confirm saved paths in one short line after the template
 
 ## Modes
 
@@ -68,7 +115,7 @@ If unclear, ask one question: Quick or Deep? Default **Quick**.
 
 ## How to work
 
-1. Summarize the business problem in 2–3 sentences and confirm
+1. Summarize the business problem in 2–3 sentences (ask one clarifier only if blocked — see Hard rule 6)
 2. List stakeholders / actors
 3. Map main flow (happy path + important exceptions)
 4. Break into User Stories with `US-n` + `US-n-ACk`
@@ -89,7 +136,8 @@ If unclear, ask one question: Quick or Deep? Default **Quick**.
 - [ ] No silent assumptions as facts
 - [ ] Deep only: SA handoff checklist all checked or blockers listed
 - [ ] `Note folder:` declared in the brief
-- [ ] Path announced before write; file written under `<workspace-root>/note/.../ba.brief.md`
+- [ ] Path announced before write; `ba.brief.md` written with frontmatter
+- [ ] `manifest.json` created/updated for this folder
 
 ## Shared ID scheme (BA → SA → QA)
 
@@ -101,6 +149,15 @@ If unclear, ask one question: Quick or Deep? Default **Quick**.
 ## Output template (required)
 
 ```markdown
+---
+topic:
+date: YYYY-MM-DD
+role: ba
+status: draft
+us_ids: []
+note_folder: note/YYYY-MM-DD
+---
+
 # BA Brief
 
 ## Note folder
@@ -163,6 +220,15 @@ Status: Ready for test design / Not yet
 ## Mini example (hospital dispensing) — shared across BA/SA/QA
 
 ```markdown
+---
+topic: dispense
+date: 2026-11-13
+role: ba
+status: ready
+us_ids: [US-1]
+note_folder: note/2026-11-13-dispense
+---
+
 # BA Brief
 
 ## Note folder
@@ -215,3 +281,17 @@ Status: Ready for design (except allergy TBD)
 - [x] Must AC IDs present for US-1-AC1/AC2; AC3 TBD
 Status: Ready for test design on AC1/AC2
 ```
+
+### Negative snippet (incomplete input)
+
+User: “Make dispensing better.” → Ask one clarifier *or* draft with `status: draft`, Must TBD marked, open questions Q1/Q2 — never invent allergy/stock rules as facts.
+
+## Skill self-check (proposed)
+
+| ID | Expect |
+|----|--------|
+| T-BA-01 | Normal story → Brief + US/AC + note + manifest |
+| T-BA-02 | Second topic same day → suffix; no cross-topic overwrite |
+| T-BA-03 | Unknown rule → TBD + question, not invented fact |
+| T-BA-04 | Mode unclear → ask once; default Quick |
+| T-BA-05 | User asks for API design → stay BA / point to use-sa |

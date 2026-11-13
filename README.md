@@ -9,19 +9,23 @@ Toolkit สำหรับขึ้นโปรเจกต์ใหม่บน
 Kio/
   skills/            # Agent Skills (โฟลเดอร์ละ SKILL.md)
   rules/             # แหล่งเดียว: Cursor .mdc (แปลงเป็น Claude .md ตอนติดตั้ง)
-  templates/         # AGENTS.md (Cursor) + CLAUDE.md (Claude Code)
+  templates/         # AGENTS.md + CLAUDE.md + note/ (schemas)
   scripts/
     install.ps1      # Windows (PowerShell)
     install.sh       # macOS / Linux (bash)
+    validate-notes.ps1
+    validate-notes.sh
 
 # ในโปรเจกต์ที่ติดตั้งแล้ว (workspace root — ไม่ใช่ในโฟลเดอร์ Kio เอง)
 note/YYYY-MM-DD/
-  ba.brief.md
+  ba.brief.md      # + YAML frontmatter
   sa.spec.md
   qa.status.md
+  manifest.json    # machine index for future summary/search
 ```
 
-`use-ba` / `use-sa` / `use-qa` เซฟ note เองเสมอที่ workspace root; หลายงานวันเดียวใช้ `note/YYYY-MM-DD-{suffix}/`
+`use-ba` / `use-sa` / `use-qa` เซฟ note เองเสมอที่ workspace root; หลายงานวันเดียวใช้ `note/YYYY-MM-DD-{suffix}/`  
+สัญญา note: `templates/note/` (ติดตั้งไปที่โปรเจกต์ด้วย) — ตรวจด้วย `scripts/validate-notes.*`
 
 ## ปลายทางตอนติดตั้ง
 
@@ -29,9 +33,11 @@ note/YYYY-MM-DD/
 |-----|--------|-------|----------|
 | Cursor | `.cursor/skills/` | `.cursor/rules/*.mdc` | `AGENTS.md` |
 | Claude Code | `.claude/skills/` | `.claude/rules/*.md` | `CLAUDE.md` |
+| ทั้งคู่ | | | `templates/note/` (schema + README) |
 
 ค่าเริ่มต้นติดตั้ง **ทั้งสอง** (`both`)  
-เทมเพลตที่มีอยู่แล้วจะไม่ถูกทับ เว้นใส่ `-ForceTemplates` / `force`
+`AGENTS.md` / `CLAUDE.md` ที่มีอยู่แล้วจะไม่ถูกทับ เว้นใส่ `-ForceTemplates` / `force`  
+`templates/note/` จะถูกอัปเดตทุกครั้งที่ติดตั้ง
 
 ## ติดตั้ง
 
@@ -70,7 +76,7 @@ Credit: by Cloudflare — จาก [cloudflare/security-audit-skill](https://gi
 
 Kio
 
-- `use-ba` · `use-sa` · `use-qa`
+- `use-ba` · `use-sa` · `use-qa` · `summarize-notes`
 
 รายละเอียดใน [`skills/README.md`](./skills/README.md)
 

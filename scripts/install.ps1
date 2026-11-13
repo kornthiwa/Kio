@@ -125,6 +125,23 @@ function Install-Template([string]$FileName) {
   return 1
 }
 
+function Install-NoteContract {
+  $src = Join-Path $templatesSrc "note"
+  if (-not (Test-Path -LiteralPath $src)) {
+    Write-Host "  skip   templates/note  (missing)"
+    return 0
+  }
+  $dest = Join-Path $Target "templates\note"
+  Ensure-Dir $dest
+  $count = 0
+  foreach ($file in @(Get-ChildItem -LiteralPath $src -File -ErrorAction SilentlyContinue)) {
+    Copy-Item -LiteralPath $file.FullName -Destination (Join-Path $dest $file.Name) -Force
+    Write-Host "  note   templates/note/$($file.Name)"
+    $count++
+  }
+  return $count
+}
+
 Write-Host "Kio install → $Target  (app: $App)"
 Write-Host ""
 
@@ -150,6 +167,10 @@ if ($App -eq "claude" -or $App -eq "both") {
   Write-Host ""
 }
 
+Write-Host "[Note contract]"
+$totalTemplates += Install-NoteContract
+Write-Host ""
+
 Write-Host "Done. skills: $totalSkills  |  rules: $totalRules  |  templates: $totalTemplates"
 if ($App -eq "cursor" -or $App -eq "both") {
   Write-Host "  Cursor → .cursor/skills  .cursor/rules  AGENTS.md"
@@ -157,3 +178,4 @@ if ($App -eq "cursor" -or $App -eq "both") {
 if ($App -eq "claude" -or $App -eq "both") {
   Write-Host "  Claude → .claude/skills  .claude/rules  CLAUDE.md"
 }
+Write-Host "  Note   → templates/note/  (manifest + frontmatter schemas)"

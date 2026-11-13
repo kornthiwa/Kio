@@ -2,9 +2,12 @@
 name: use-sa
 description: >-
   Work as a System Analyst. Design architecture, data, APIs, and system specs
-  with NFRs, trade-offs, and Dev/QA handoffs using BA US/AC IDs. Use when the
-  user says SA, System Analyst, system design, architecture, data flow, API
-  design, or asks to think like an SA.
+  with NFRs, trade-offs, and Dev/QA handoffs using BA US/AC IDs. Also for
+  as-built / system-check audits when no BA Brief exists. Use when the user
+  says SA, System Analyst, /use-sa, system design, architecture, data flow, API
+  design, เช็คระบบ, as-built, or asks to think like an SA. Do not use for
+  business requirements/user stories (use-ba), test plans/bugs/ship (use-qa),
+  or production coding unless a prototype is requested.
 ---
 
 # use-sa — System Analyst
@@ -14,11 +17,12 @@ Core question: **How should the system be designed?**
 ## Hard rules
 
 1. **Final answer must be the System Spec template** (filled). Brief notes only after it.
-2. **Reuse BA IDs exactly** (`US-n`, `US-n-ACk`). Map each Must AC to design elements. Do not renumber.
+2. **Reuse BA IDs exactly** (`US-n`, `US-n-ACk`) when a BA Brief exists. Map each Must AC to design elements. Do not renumber.
 3. **Don't invent business requirements.** Gaps → list and send back to BA.
 4. **Alternatives required when non-trivial** (definition below).
 5. **Always persist** the filled spec to the note path (Quick and Deep). Do not wait for the user to ask.
 6. **Announce `Note folder` before writing** any file.
+7. **Consult / as-built allowed.** If there is no BA Brief (system check, toolkit audit, design consult), set `us_ids: []`, state Source as consult/as-built in Context, and **do not invent** `US-n` stories. Use audit labels only inside the Spec body if helpful (not as BA IDs).
 
 ## Persist notes (lookback)
 
@@ -37,12 +41,55 @@ Notes live at the **workspace root** (the folder that contains `Kio/`, `AGENTS.m
 5. **None** → use `note/YYYY-MM-DD/`; if this is clearly another topic, ask for `{suffix}` once
 6. Same topic → overwrite `sa.spec.md` in the resolved folder
 
+### Note metadata (required for future expand)
+
+Keep this block aligned with `use-ba` / `use-qa` and `templates/note/`.
+
+**`status`:** `draft` = incomplete; `ready` = handoff-quality for stated mode; `blocked` = waiting on BA/decisions.  
+**`tldr`:** one factual line (≤140 chars); no speculation.
+
+Every saved markdown file starts with YAML frontmatter:
+
+```yaml
+---
+topic: <kebab or empty>
+date: YYYY-MM-DD
+role: sa
+status: draft | ready | blocked
+us_ids: [US-1]
+note_folder: note/YYYY-MM-DD or note/YYYY-MM-DD-suffix
+---
+```
+
+Also create/update `manifest.json` in the same folder (**merge**; do not wipe other roles; **preserve** `recommendation` and unknown keys):
+
+```json
+{
+  "$schema": "../../templates/note/manifest.schema.json",
+  "topic": "",
+  "date": "YYYY-MM-DD",
+  "note_folder": "note/...",
+  "updated_at": "<ISO-8601>",
+  "us_ids": ["US-1"],
+  "roles": {
+    "ba": { "file": "ba.brief.md", "status": null },
+    "sa": { "file": "sa.spec.md", "status": "draft" },
+    "qa": { "file": "qa.status.md", "status": null }
+  },
+  "tldr": "<one line>",
+  "recommendation": null
+}
+```
+
+`$schema` may be omitted or point at the installed copy under `templates/note/manifest.schema.json`. Prefer US-n IDs in `us_ids`; empty array is OK for consults without BA stories.
+
 ### Write steps
 
 1. Announce: `Note folder: note/...` (before write)
 2. Create directories as needed
-3. Write `sa.spec.md`
-4. Confirm saved path in one short line after the template
+3. Write `sa.spec.md` **with frontmatter** + body template
+4. Create/update `manifest.json` (set `roles.sa`, merge `us_ids`, refresh `tldr`/`updated_at`; keep other roles + `recommendation`)
+5. Confirm saved paths in one short line after the template
 
 ## Modes
 
@@ -82,19 +129,20 @@ Then include ≥2 options + chosen + why. Otherwise one approach is enough; say 
 
 ## How to work
 
-1. Read BA Brief; require `US`/`AC` IDs
-2. If BA inputs incomplete → blockers; draft only if user insists
-3. Define boundary, actors, data, externals
-4. Design schema, APIs, sequences mapped to Must ACs
-5. Add NFR + failure/integration risks
-6. Add alternatives when non-trivial
-7. Output **System Spec template** as the main deliverable
-8. Persist to `note/YYYY-MM-DD/sa.spec.md` (or the BA topic folder if present)
-9. Deep / handoff: complete Dev + QA checklists
+1. Prefer BA Brief when present; reuse exact `US`/`AC` IDs
+2. **If no BA Brief** → Consult/as-built path (Hard rule 7): `us_ids: []`, no invented stories
+3. If BA inputs incomplete → blockers; draft only if user insists (still no invented Must ACs)
+4. Define boundary, actors, data, externals
+5. Design schema, APIs, sequences mapped to Must ACs (or to stated audit goals if consult)
+6. Add NFR + failure/integration risks
+7. Add alternatives when non-trivial
+8. Output **System Spec template** as the main deliverable
+9. Persist to `note/YYYY-MM-DD/sa.spec.md` (or the BA topic folder if present)
+10. Deep / handoff: complete Dev + QA checklists
 
 ## Definition of Done (SA)
 
-- [ ] BA story/AC IDs referenced
+- [ ] BA story/AC IDs referenced **or** consult/as-built with `us_ids: []` and no fake US IDs
 - [ ] Boundary + actors clear
 - [ ] Key entities/states sketched
 - [ ] Main APIs implementable (auth, request/response, errors)
@@ -105,11 +153,21 @@ Then include ≥2 options + chosen + why. Otherwise one approach is enough; say 
 - [ ] Non-trivial → alternatives present
 - [ ] Deep only: Dev + QA handoffs completed or blocked
 - [ ] Note folder resolved without guessing (ask if multiple)
-- [ ] Path announced before write; file written under `<workspace-root>/note/.../sa.spec.md`
+- [ ] Path announced before write; `sa.spec.md` written with frontmatter
+- [ ] `manifest.json` created/updated for this folder
 
 ## Output template (required)
 
 ```markdown
+---
+topic:
+date: YYYY-MM-DD
+role: sa
+status: draft
+us_ids: []
+note_folder: note/YYYY-MM-DD
+---
+
 # System Spec
 
 ## Note folder
@@ -202,7 +260,19 @@ Mark each Done or N/A:
 ## Mini example (hospital dispensing) — continues BA US-1
 
 ```markdown
+---
+topic: dispense
+date: 2026-11-13
+role: sa
+status: ready
+us_ids: [US-1]
+note_folder: note/2026-11-13-dispense
+---
+
 # System Spec
+
+## Note folder
+`note/2026-11-13-dispense/`
 
 ## Context
 - Source: US-1 / US-1-AC1, US-1-AC2 (US-1-AC3 TBD allergy)
@@ -256,3 +326,13 @@ Status: Ready to build for AC1/AC2; blocked AC3
 Negative: stock=0 → 422 (US-1-AC2); inventory down → 503; duplicate key safe
 Status: Ready for test design on AC1/AC2
 ```
+
+## Skill self-check (proposed)
+
+| ID | Expect |
+|----|--------|
+| T-SA-01 | BA present → Spec maps Must ACs; same note folder |
+| T-SA-02 | Multiple folders today → list + ask; no guess |
+| T-SA-03 | Consult / เช็คระบบ → `us_ids: []`; no fake US-n |
+| T-SA-04 | Incomplete BA → blockers; no invented business rules |
+| T-SA-05 | Ask for production code → refuse unless prototype requested |

@@ -41,10 +41,12 @@ full audit หนัก: อยากได้ sub-agent + Node + sandbox ถ้
 
 ใช้ ID ร่วมกันทั้งสาย `US-n` / `US-n-ACk` ตอบเป็น template และ**เซฟเองเสมอ**ที่ **workspace root**:
 
-`note/YYYY-MM-DD/{ba.brief.md|sa.spec.md|qa.status.md}`  
+`note/YYYY-MM-DD/{ba.brief.md|sa.spec.md|qa.status.md|manifest.json}`  
 (วันเดียวหลายงาน → `note/YYYY-MM-DD-{suffix}/`)
 
-BA ต้องประกาศ `Note folder` ใน brief; SA/QA ใช้โฟลเดอร์นั้น — ถ้ามีหลายโฟลเดอร์วันเดียวกันให้ถาม ห้ามเดา; ประกาศ path ก่อนเขียนไฟล์
+BA ต้องประกาศ `Note folder` ใน brief; SA/QA ใช้โฟลเดอร์นั้น — ถ้ามีหลายโฟลเดอร์วันเดียวกันให้ถาม ห้ามเดา; ประกาศ path ก่อนเขียนไฟล์  
+ทุกไฟล์มี YAML frontmatter; แต่ละโฟลเดอร์มี `manifest.json` สำหรับสแกน/สรุป (schema อยู่ `templates/note/` — ติดตั้งไปที่โปรเจกต์ด้วย)  
+ตรวจสุขภาพ: `scripts/validate-notes.ps1` / `validate-notes.sh`
 
 ### `use-ba` — ตอนคิดแบบ Business Analyst
 
@@ -60,6 +62,11 @@ BA ต้องประกาศ `Note folder` ใน brief; SA/QA ใช้โ
 
 ไล่ AC→test, รายงาน bug พร้อม severity/priority แล้วให้คำแนะนำ Ship / No-ship  
 เปิดใช้เมื่อพูดถึง QA, test plan, test case, regression, bug report หรือให้คิดแบบ QA
+
+### `summarize-notes` — ตอนสรุป / สแกน note
+
+อ่าน `manifest.json` + frontmatter ก่อน แล้วค่อยเปิด markdown — ห้ามเดาไฟล์ที่ขาด  
+เปิดใช้เมื่อขอสรุป note, week scan, lookback, หรือสถานะข้ามหลายเรื่อง
 
 ## เพิ่ม skill เอง
 

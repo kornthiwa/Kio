@@ -1,0 +1,11 @@
+---
+description: Kio toolkit source of truth — edit Kio/ not only installed copies under .cursor or .claude
+alwaysApply: true
+---
+
+# Kio source of truth
+
+- The toolkit source of truth is `Kio/` (skills, rules, templates, scripts).
+- `.cursor/` and `.claude/` are **install copies**. Do not treat edits there as done unless `Kio/` is updated too.
+- After changing something in `Kio/`, re-run the install script into the target workspace when the user wants copies refreshed.
+- `AGENTS.md` / `CLAUDE.md` at workspace root are workspace guidance; starter templates live in `Kio/templates/`.

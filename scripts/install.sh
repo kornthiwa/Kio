@@ -137,6 +137,27 @@ install_template() {
   TEMPLATE_COUNT=1
 }
 
+install_note_contract() {
+  local src="$TEMPLATES_SRC/note"
+  local dest="$TARGET/templates/note"
+  local count=0
+  if [[ ! -d "$src" ]]; then
+    echo "  skip   templates/note  (missing)"
+    TEMPLATE_COUNT=0
+    return
+  fi
+  ensure_dir "$dest"
+  shopt -s nullglob
+  for f in "$src"/*; do
+    [[ -f "$f" ]] || continue
+    cp "$f" "$dest/$(basename "$f")"
+    echo "  note   templates/note/$(basename "$f")"
+    count=$((count + 1))
+  done
+  shopt -u nullglob
+  TEMPLATE_COUNT=$count
+}
+
 echo "Kio install → $TARGET  (app: $APP)"
 echo ""
 
@@ -168,6 +189,12 @@ if [[ "$APP" == "claude" || "$APP" == "both" ]]; then
   echo ""
 fi
 
+echo "[Note contract]"
+install_note_contract
+total_templates=$((total_templates + TEMPLATE_COUNT))
+echo ""
+
 echo "Done. skills: $total_skills  |  rules: $total_rules  |  templates: $total_templates"
 [[ "$APP" == "cursor" || "$APP" == "both" ]] && echo "  Cursor → .cursor/skills  .cursor/rules  AGENTS.md"
 [[ "$APP" == "claude" || "$APP" == "both" ]] && echo "  Claude → .claude/skills  .claude/rules  CLAUDE.md"
+echo "  Note   → templates/note/  (manifest + frontmatter schemas)"

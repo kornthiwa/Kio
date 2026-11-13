@@ -2,9 +2,11 @@
 name: use-qa
 description: >-
   Work as a QA Engineer. Build AC-traced tests using BA US/AC IDs, report bugs
-  with severity/priority rules, and give ship/no-ship status. Use when the user
-  says QA, quality assurance, test plan, test cases, regression, bug report, or
-  asks to think like QA.
+  with severity/priority rules, and give ship / ship_with_risk / no_ship status.
+  Use when the user says QA, /use-qa, quality assurance, test plan, test cases,
+  regression, bug report, release gate, ship decision, or asks to think like QA
+  (including Thai: ทดสอบ, บั๊ก, ออกของได้ไหม). Do not use for writing user
+  stories (use-ba) or system/API design (use-sa).
 ---
 
 # use-qa — QA Engineer
@@ -14,11 +16,12 @@ Core question: **Does this work correctly, and what could break?**
 ## Hard rules
 
 1. **Final answer must be the QA Status template** (filled). Brief notes only after it.
-2. **Trace with BA/SA IDs only** (`US-n-ACk`). Every Must AC → ≥1 test ID `TC-…`.
+2. **Trace with BA/SA IDs only** (`US-n-ACk`) when those IDs exist. Every Must AC → ≥1 test ID `TC-…`. Never renumber BA/SA IDs.
 3. **Don't say “looks fine”** without listing what was verified.
 4. Apply **Severity → Priority defaults** below unless user overrides with reason.
 5. **Always persist** the filled status to the note path (Quick and Deep). Do not wait for the user to ask.
 6. **Announce `Note folder` before writing** any file.
+7. **No BA/SA artifacts:** ask which note folder / paste ACs once. If still none, produce a **blocked** QA Status (`status: blocked`, `recommendation: null`) listing missing inputs — do not invent `US-n` IDs.
 
 ## Persist notes (lookback)
 
@@ -37,12 +40,56 @@ Notes live at the **workspace root** (the folder that contains `Kio/`, `AGENTS.m
 5. **None** → use `note/YYYY-MM-DD/`; if clearly another topic, ask for `{suffix}` once
 6. Same topic → overwrite `qa.status.md` in the resolved folder
 
+### Note metadata (required for future expand)
+
+Keep this block aligned with `use-ba` / `use-sa` and `templates/note/`.
+
+**`status`:** `draft` = in progress; `ready` = recommendation finalized for stated mode; `blocked` = missing BA/SA/AC inputs.  
+**`tldr`:** one factual line (≤140 chars); include recommendation enum when known.
+
+Every saved markdown file starts with YAML frontmatter:
+
+```yaml
+---
+topic: <kebab or empty>
+date: YYYY-MM-DD
+role: qa
+status: draft | ready | blocked
+us_ids: [US-1]
+note_folder: note/YYYY-MM-DD or note/YYYY-MM-DD-suffix
+recommendation: ship | ship_with_risk | no_ship | null
+---
+```
+
+Also create/update `manifest.json` in the same folder (**merge**; do not wipe other roles; **preserve** unknown keys):
+
+```json
+{
+  "$schema": "../../templates/note/manifest.schema.json",
+  "topic": "",
+  "date": "YYYY-MM-DD",
+  "note_folder": "note/...",
+  "updated_at": "<ISO-8601>",
+  "us_ids": ["US-1"],
+  "roles": {
+    "ba": { "file": "ba.brief.md", "status": null },
+    "sa": { "file": "sa.spec.md", "status": null },
+    "qa": { "file": "qa.status.md", "status": "draft" }
+  },
+  "tldr": "<one line>",
+  "recommendation": null
+}
+```
+
+`$schema` may be omitted or point at the installed copy under `templates/note/manifest.schema.json`. Prefer US-n IDs in `us_ids`; empty array is OK for consults without BA stories.
+
 ### Write steps
 
 1. Announce: `Note folder: note/...` (before write)
 2. Create directories as needed
-3. Write `qa.status.md`
-4. Confirm saved path in one short line after the template
+3. Write `qa.status.md` **with frontmatter** + body template
+4. Create/update `manifest.json` (set `roles.qa`, `recommendation`, merge `us_ids`, refresh `tldr`/`updated_at`)
+5. Confirm saved paths in one short line after the template
 
 ## Modes
 
@@ -58,11 +105,24 @@ If unclear, ask: Quick or Deep? Default **Quick**.
 | Severity | Meaning | Default Priority |
 |----------|---------|------------------|
 | **S1** | Core flow broken / data loss / security | **P1** |
-| **S2** | Major feature broken; weak/no workaround | **P1** or **P2** (P1 if Must AC) |
+| **S2** | Major feature broken; weak/no workaround | **P1** if traces a **Must** AC; else **P2** |
 | **S3** | Limited impact; workaround exists | **P3** |
 | **S4** | Cosmetic | **P4** |
 
 If you deviate, state why in one line.
+
+## Recommendation vocabulary (required)
+
+Use these **exact enums** in frontmatter + `manifest.json`. Prose in the body may use the display label.
+
+| Enum (machine) | Display label |
+|----------------|---------------|
+| `ship` | Ship |
+| `ship_with_risk` | Ship with risk |
+| `no_ship` | No-ship |
+| `null` | not decided / blocked |
+
+Never write `Ship with risk` into YAML/`recommendation` — use `ship_with_risk`.
 
 ## Do
 
@@ -81,12 +141,12 @@ If you deviate, state why in one line.
 
 ## How to work
 
-1. Read BA AC IDs + SA behavior notes
+1. Read BA AC IDs + SA behavior notes (if missing → Hard rule 7)
 2. Build AC → TC matrix (same AC IDs)
 3. Execute or reason through cases
 4. Log BUG/GAP with templates
 5. Run regression shortlist
-6. Output **QA Status template** as main deliverable
+6. Output **QA Status template** as main deliverable (Recommendation section: display label; frontmatter: enum)
 7. Persist to `note/YYYY-MM-DD/qa.status.md` (or the BA/SA topic folder if present)
 
 ## Definition of Done (QA)
@@ -96,14 +156,26 @@ If you deviate, state why in one line.
 - [ ] Failures filed as BUG or GAP
 - [ ] Regression shortlist considered
 - [ ] Residual risks listed
-- [ ] Recommendation stated: Ship / Ship with risk / No-ship
+- [ ] Recommendation stated with display label **and** matching enum in frontmatter/manifest
 - [ ] Deep only: exit criteria checklist completed
 - [ ] Note folder resolved without guessing (ask if multiple)
-- [ ] Path announced before write; file written under `<workspace-root>/note/.../qa.status.md`
+- [ ] Path announced before write; `qa.status.md` written with frontmatter
+- [ ] `manifest.json` created/updated for this folder
+- [ ] If no BA/SA inputs: blocked path used (no invented US-n)
 
 ## Output template (required)
 
 ```markdown
+---
+topic:
+date: YYYY-MM-DD
+role: qa
+status: draft
+us_ids: []
+note_folder: note/YYYY-MM-DD
+recommendation: null
+---
+
 # QA Status
 
 ## Note folder
@@ -160,6 +232,7 @@ If you deviate, state why in one line.
 
 ## Recommendation
 Ship / Ship with risk / No-ship
+(machine: ship | ship_with_risk | no_ship)
 Reason:
 Would change if:
 ```
@@ -172,7 +245,20 @@ Would change if:
 ## Mini example (hospital dispensing) — continues BA/SA US-1
 
 ```markdown
+---
+topic: dispense
+date: 2026-11-13
+role: qa
+status: ready
+us_ids: [US-1]
+note_folder: note/2026-11-13-dispense
+recommendation: no_ship
+---
+
 # QA Status
+
+## Note folder
+`note/2026-11-13-dispense/`
 
 ## Scope
 - Build / stories: US-1
@@ -231,6 +317,17 @@ Would change if:
 
 ## Recommendation
 No-ship
+(machine: no_ship)
 Reason: Must AC US-1-AC2 failed (S1)
 Would change if: BUG-1 fixed and AC2 retests Pass; AC3 either specified or waived
 ```
+
+## Skill self-check (proposed)
+
+| ID | Expect |
+|----|--------|
+| T-QA-01 | Must AC fail → BUG + `recommendation: no_ship` |
+| T-QA-02 | AC TBD → GAP to BA; Blocked not silent pass |
+| T-QA-03 | “Looks fine” ask → list verified AC/TC IDs |
+| T-QA-04 | No BA/SA → blocked status; no invented US-n |
+| T-QA-05 | Architecture redesign ask → refuse; stay QA |
