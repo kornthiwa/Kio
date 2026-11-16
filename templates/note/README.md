@@ -6,6 +6,7 @@ Workspace root (not inside `Kio/` unless that is the workspace):
 note/YYYY-MM-DD/
   ba.brief.md
   sa.spec.md
+  dev.impl.md
   qa.status.md
   manifest.json
 ```
@@ -22,9 +23,11 @@ See `frontmatter.schema.json`.
 ---
 topic: dispense
 date: 2026-11-13
-role: ba          # ba | sa | qa
+role: ba          # ba | sa | dev | qa
 status: ready     # draft | ready | blocked
 us_ids: [US-1]    # prefer US-n; [] OK for consults
+bo_ids: [BO-1]    # optional; BA objectives, same IDs as the brief
+br_ids: [BR-1]    # optional; BA requirements (not RULE-n)
 note_folder: note/2026-11-13-dispense
 recommendation: null   # qa only: ship | ship_with_risk | no_ship | null
 ---

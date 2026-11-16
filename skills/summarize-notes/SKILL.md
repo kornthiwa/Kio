@@ -1,7 +1,7 @@
 ---
 name: summarize-notes
 description: >-
-  Summarize BA/SA/QA lookback notes from workspace-root note/ folders using
+  Summarize BA/SA/Dev/QA lookback notes from workspace-root note/ folders using
   manifest.json and frontmatter first. Use when the user asks to summarize notes,
   week scan, lookback summary, what shipped, or status across note topics.
 ---
@@ -31,7 +31,7 @@ Default: **Topic** if a path/topic is given; else ask Topic vs Week.
 1. Resolve workspace root and list `note/*/`
 2. Pick folder(s) per mode
 3. For each folder:
-   - Read `manifest.json` if present → `topic`, `us_ids`, `roles.*.status`, `tldr`, `recommendation`
+   - Read `manifest.json` if present → `topic`, `us_ids`, `bo_ids`, `br_ids` (if present), `roles.*.status`, `tldr`, `recommendation`
    - Note which role files exist on disk
    - If summarizing deeply, read present role files; honor frontmatter `status` / `recommendation`
 4. Emit the output template (below)
@@ -50,7 +50,8 @@ Default: **Topic** if a path/topic is given; else ask Topic vs Week.
 ### `note/YYYY-MM-DD-suffix/`
 - Topic: …
 - US IDs: … | (none)
-- Roles: ba=ready|missing  sa=…  qa=…
+- BO / BR IDs: … | (none in manifest)
+- Roles: ba=ready|missing  sa=…  dev=…  qa=…
 - TL;DR: … | (no manifest tldr)
 - QA recommendation: ship | ship_with_risk | no_ship | null | (no QA)
 - Missing files: …
@@ -78,7 +79,7 @@ Default: **Topic** if a path/topic is given; else ask Topic vs Week.
 ### `note/2026-11-13-dispense/`
 - Topic: dispense
 - US IDs: US-1
-- Roles: ba=ready  sa=ready  qa=ready
+- Roles: ba=ready  sa=ready  dev=missing  qa=ready
 - TL;DR: Dispense Must AC1/AC2; allergy TBD
 - QA recommendation: no_ship
 - Missing files: (none)
@@ -87,7 +88,7 @@ Default: **Topic** if a path/topic is given; else ask Topic vs Week.
 ### `note/2026-11-13-note-verify/`
 - Topic: note-verify
 - US IDs: US-1
-- Roles: ba=missing  sa=ready  qa=missing
+- Roles: ba=missing  sa=ready  dev=missing  qa=missing
 - TL;DR: metadata gaps closed
 - QA recommendation: (no QA)
 - Missing files: ba.brief.md, qa.status.md

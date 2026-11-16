@@ -5,7 +5,7 @@
 .PARAMETER Target
   Project root that contains note/. Defaults to current directory.
 .PARAMETER StrictFrontmatter
-  Also require YAML frontmatter on present ba.brief.md / sa.spec.md / qa.status.md
+  Also require YAML frontmatter on present ba.brief.md / sa.spec.md / dev.impl.md / qa.status.md
 #>
 param(
   [string]$Target = (Get-Location).Path,
@@ -44,7 +44,7 @@ function Test-ManifestObject($m, [string]$PathLabel) {
   if ($null -eq $m.roles) {
     Fail "$PathLabel roles missing"
   } else {
-    foreach ($role in @("ba", "sa", "qa")) {
+    foreach ($role in @("ba", "sa", "dev", "qa")) {
       $entry = $m.roles.$role
       if ($null -eq $entry) {
         Fail "$PathLabel roles.$role missing"
@@ -124,6 +124,7 @@ foreach ($dir in $dirs) {
   if ($StrictFrontmatter) {
     Test-Frontmatter (Join-Path $dir.FullName "ba.brief.md") "ba"
     Test-Frontmatter (Join-Path $dir.FullName "sa.spec.md") "sa"
+    Test-Frontmatter (Join-Path $dir.FullName "dev.impl.md") "dev"
     Test-Frontmatter (Join-Path $dir.FullName "qa.status.md") "qa"
   }
 }

@@ -62,7 +62,7 @@ if "date" in m and not re.match(r"^\d{4}-\d{2}-\d{2}$", str(m["date"])):
 if not isinstance(m.get("us_ids"), list):
     errs.append("us_ids must be an array")
 roles = m.get("roles") or {}
-for role in ("ba", "sa", "qa"):
+for role in ("ba", "sa", "dev", "qa"):
     entry = roles.get(role)
     if not isinstance(entry, dict):
         errs.append(f"roles.{role} missing")
@@ -86,7 +86,7 @@ PY
   fi
 
   if [[ "$STRICT" == "strict" ]]; then
-    for pair in "ba.brief.md:ba" "sa.spec.md:sa" "qa.status.md:qa"; do
+    for pair in "ba.brief.md:ba" "sa.spec.md:sa" "dev.impl.md:dev" "qa.status.md:qa"; do
       file="${pair%%:*}"
       role="${pair##*:}"
       path="$dir$file"

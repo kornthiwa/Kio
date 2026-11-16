@@ -20,11 +20,12 @@ Kio/
 note/YYYY-MM-DD/
   ba.brief.md      # + YAML frontmatter
   sa.spec.md
+  dev.impl.md
   qa.status.md
   manifest.json    # machine index for future summary/search
 ```
 
-`use-ba` / `use-sa` / `use-qa` เซฟ note เองเสมอที่ workspace root; หลายงานวันเดียวใช้ `note/YYYY-MM-DD-{suffix}/`  
+`use-ba` / `use-sa` / `use-dev` / `use-qa` เซฟ note เองเสมอที่ workspace root; หลายงานวันเดียวใช้ `note/YYYY-MM-DD-{suffix}/`  
 สัญญา note: `templates/note/` (ติดตั้งไปที่โปรเจกต์ด้วย) — ตรวจด้วย `scripts/validate-notes.*`
 
 ## ปลายทางตอนติดตั้ง
@@ -76,7 +77,7 @@ Credit: by Cloudflare — จาก [cloudflare/security-audit-skill](https://gi
 
 Kio
 
-- `use-ba` · `use-sa` · `use-qa` · `summarize-notes`
+- `use-ba` · `use-sa` · `use-dev` · `use-qa` · `summarize-notes`
 
 รายละเอียดใน [`skills/README.md`](./skills/README.md)
 

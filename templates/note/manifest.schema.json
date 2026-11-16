@@ -15,6 +15,16 @@
       "items": { "type": "string", "minLength": 1 },
       "description": "Prefer US-n (e.g. US-1). Empty array allowed for consults without BA stories."
     },
+    "bo_ids": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Optional. BA BO-n IDs. Preserve on merge."
+    },
+    "br_ids": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Optional. BA BR-n requirement IDs. Preserve on merge. RULE-n stays in the brief body."
+    },
     "tldr": { "type": "string" },
     "recommendation": {
       "type": ["string", "null"],
@@ -22,10 +32,11 @@
     },
     "roles": {
       "type": "object",
-      "required": ["ba", "sa", "qa"],
+      "required": ["ba", "sa", "dev", "qa"],
       "properties": {
         "ba": { "$ref": "#/$defs/roleEntry" },
         "sa": { "$ref": "#/$defs/roleEntry" },
+        "dev": { "$ref": "#/$defs/roleEntry" },
         "qa": { "$ref": "#/$defs/roleEntry" }
       }
     }

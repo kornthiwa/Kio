@@ -39,24 +39,33 @@ full audit หนัก: อยากได้ sub-agent + Node + sandbox ถ้
 
 ## Bundled (Kio) — team roles
 
-ใช้ ID ร่วมกันทั้งสาย `US-n` / `US-n-ACk` ตอบเป็น template และ**เซฟเองเสมอ**ที่ **workspace root**:
+BA เป็นต้นทาง ID: `BO-n` → `BR-n` → `US-n` / `US-n-ACk` พร้อม `RULE-n` และ `NFR-n` — SA/Dev/QA ใช้ ID เดิม ห้ามออกชุดใหม่; `TC-n` เป็นของ QA ที่ชี้กลับ AC  
+ตอบเป็น template และ**เซฟเองเสมอ**ที่ **workspace root**:
 
-`note/YYYY-MM-DD/{ba.brief.md|sa.spec.md|qa.status.md|manifest.json}`  
+`note/YYYY-MM-DD/{ba.brief.md|sa.spec.md|dev.impl.md|qa.status.md|manifest.json}`  
 (วันเดียวหลายงาน → `note/YYYY-MM-DD-{suffix}/`)
 
-BA ต้องประกาศ `Note folder` ใน brief; SA/QA ใช้โฟลเดอร์นั้น — ถ้ามีหลายโฟลเดอร์วันเดียวกันให้ถาม ห้ามเดา; ประกาศ path ก่อนเขียนไฟล์  
+BA ต้องประกาศ `Note folder` ใน brief; SA/Dev/QA ใช้โฟลเดอร์นั้น — ถ้ามีหลายโฟลเดอร์วันเดียวกันให้ถาม ห้ามเดา; ประกาศ path ก่อนเขียนไฟล์  
 ทุกไฟล์มี YAML frontmatter; แต่ละโฟลเดอร์มี `manifest.json` สำหรับสแกน/สรุป (schema อยู่ `templates/note/` — ติดตั้งไปที่โปรเจกต์ด้วย)  
 ตรวจสุขภาพ: `scripts/validate-notes.ps1` / `validate-notes.sh`
 
 ### `use-ba` — ตอนคิดแบบ Business Analyst
 
-เก็บปัญหาธุรกิจ เขียน flow / User Story / Acceptance Criteria แล้วส่งต่อ SA–QA  
-เปิดใช้เมื่อพูดถึง BA, requirement, user story, acceptance criteria หรือให้คิดแบบ BA
+เก็บปัญหาธุรกิจ เป้าหมาย requirement กฎธุรกิจ และความต้องการด้านคุณภาพ แล้วส่งต่อ SA–Dev–QA ด้วย ID ชุดเดียวกัน  
+เปิดใช้เมื่อพูดถึง BA, requirement, user story, acceptance criteria, business rule หรือให้คิดแบบ BA
 
 ### `use-sa` — ตอนคิดแบบ System Analyst
 
-แปลง AC เป็น System Spec: ขอบเขตระบบ, data, API, NFR, ความเสี่ยง แล้วส่งต่อ Dev–QA  
+แปลง AC เป็น System Spec ที่ Dev ทำต่อได้: ขอบเขต, data, API, NFR (มี target หรือ TBD), failure พร้อม recovery, แล้วส่งต่อ Dev–QA  
+สิ่งที่ BA ไม่ได้เขียน ต้องติดป้าย Decision หรือ Assumption — ห้ามปนกับ Requirement  
+งาน CRUD ใช้แกนสเปก; architecture, security, distributed, deploy อ่านจาก `templates/` และ `references/` เฉพาะเมื่อเข้าเงื่อนไข  
 เปิดใช้เมื่อพูดถึง SA, system design, architecture, data flow, API หรือให้คิดแบบ SA
+
+### `use-dev` — ตอนลงมือทำ
+
+ทำให้เล็กที่สุดเท่าที่ครอบคลุม Must AC ที่ไม่ถูกบล็อก และสัญญาจาก SA แล้วบันทึกไฟล์ที่แตะ, ผลตรวจแยกประเภท, และจุดที่ต่างจากสเปก  
+รายละเอียดวิศวกรรมอยู่ใน `references/` — อ่านเฉพาะเมื่อเงื่อนไขใน skill ตรง ไม่โหลดทุกไฟล์  
+เปิดใช้เมื่อพูดถึง Dev, implement, เขียนโค้ด, ทำให้ หรือให้คิดแบบนักพัฒนา — ไม่เขียน user story, ไม่ได้ออกแบบระบบ, ไม่ตัดสิน ship
 
 ### `use-qa` — ตอนคิดแบบ QA
 
