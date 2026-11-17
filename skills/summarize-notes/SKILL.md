@@ -15,7 +15,7 @@ Core question: **What do the saved notes say — without inventing facts?**
 1. Prefer **`manifest.json` + YAML frontmatter**; fall back to markdown bodies only when needed.
 2. **Never invent** missing roles, ACs, bugs, or recommendations. Say `missing` explicitly.
 3. Workspace root only: folder that contains `Kio/` / `AGENTS.md` → `note/…` (not under `Kio/` unless that is the root).
-4. If multiple topic folders match and the user did not name one → **list and ask** (do not guess).
+4. If multiple topic folders match and the user did not name one → **list and ask** (do not guess). Topic match beats "only one folder today".
 5. Optional: run `scripts/validate-notes.ps1` / `validate-notes.sh` before summarizing if the user wants a health check.
 
 ## Modes
@@ -32,8 +32,10 @@ Default: **Topic** if a path/topic is given; else ask Topic vs Week.
 2. Pick folder(s) per mode
 3. For each folder:
    - Read `manifest.json` if present → `topic`, `us_ids`, `bo_ids`, `br_ids` (if present), `roles.*.status`, `tldr`, `recommendation`
-   - Note which role files exist on disk
+   - Note which role files exist on disk (`ba.brief.md`, `sa.spec.md`, `dev.impl.md`, `qa.status.md`)
    - If summarizing deeply, read present role files; honor frontmatter `status` / `recommendation`
+   - From Dev when present: Implementation status, open `BLK-n`, verification rows that are `fail` or `not run`
+   - From QA when present: open / `fixed` / `verified` BUG counts if stated
 4. Emit the output template (below)
 5. Do **not** write notes unless the user asks to save a summary file
 
@@ -53,6 +55,7 @@ Default: **Topic** if a path/topic is given; else ask Topic vs Week.
 - BO / BR IDs: … | (none in manifest)
 - Roles: ba=ready|missing  sa=…  dev=…  qa=…
 - TL;DR: … | (no manifest tldr)
+- Dev: implementation=… | BLK=… | checks fail/not run=… | (no Dev)
 - QA recommendation: ship | ship_with_risk | no_ship | null | (no QA)
 - Missing files: …
 - Open / blocked (from files only): …
@@ -81,8 +84,9 @@ Default: **Topic** if a path/topic is given; else ask Topic vs Week.
 - US IDs: US-1
 - Roles: ba=ready  sa=ready  dev=missing  qa=ready
 - TL;DR: Dispense Must AC1/AC2; allergy TBD
+- Dev: (no Dev)
 - QA recommendation: no_ship
-- Missing files: (none)
+- Missing files: dev.impl.md
 - Open / blocked: BUG-1 stock=0; US-1-AC3 GAP
 
 ### `note/2026-11-13-note-verify/`
@@ -90,8 +94,9 @@ Default: **Topic** if a path/topic is given; else ask Topic vs Week.
 - US IDs: US-1
 - Roles: ba=missing  sa=ready  dev=missing  qa=missing
 - TL;DR: metadata gaps closed
+- Dev: (no Dev)
 - QA recommendation: (no QA)
-- Missing files: ba.brief.md, qa.status.md
+- Missing files: ba.brief.md, dev.impl.md, qa.status.md
 - Open / blocked: (none in manifest)
 
 ## Cross-topic

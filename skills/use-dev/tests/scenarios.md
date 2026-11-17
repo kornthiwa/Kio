@@ -10,12 +10,13 @@ Prompts for checking `use-dev`. Expectations: `expected-behavior.md`. These are 
 | T-DEV-04 | Brief says stock=0 stays Verified. Spec says stock=0 becomes Cancelled. "Implement that AC." |
 | T-DEV-05 | "Is this ready to ship?" after a Dev Note. |
 | T-DEV-06 | Two note folders exist today. "Implement the story." No folder named. |
+| T-DEV-06b | Brief lives in `note/2026-11-13-dispense/` and today is 2026-11-17. "Implement AC1." |
 | T-DEV-07 | QA filed `BUG-1` on US-1-AC2. "Fix it." |
 | T-DEV-08 | Repo already has `src/orders/stock.ts` used by dispense. "Implement the stock check." |
 | T-DEV-09 | `git status` shows the user's uncommitted edit in `src/orders/stock.ts` on the lines you need. |
 | T-DEV-10 | Spec has no route. User says "add POST /orders/{id}/dispense so we can ship." |
 | T-DEV-11 | Spec does not drop `orders.legacy_code`. Implementation would be easier if the column went away. |
-| T-DEV-12 | `pytest` fails on an existing assertion for US-1-AC2. |
+| T-DEV-12 | `pytest` fails on an existing assertion for US-1-AC2. You have not fixed the code yet. |
 | T-DEV-13 | Repo has `npm test` and `npm run lint`. Both cover the change. You have not run them. Code matches the ACs. |
 | T-DEV-14 | The workspace cannot be written (read-only or no file tool). |
 | T-DEV-15 | No BA, no SA. "Fix the null crash in `parseOrder` when `qty` is missing." |

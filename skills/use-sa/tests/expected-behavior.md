@@ -6,6 +6,7 @@ Pass only if every row for that id holds. A polished diagram does not offset a m
 |----|------|------|
 | T-SA-01 | Same `note_folder` as the brief; `us_ids` match; each Must AC is a row in the AC map; spec persisted with frontmatter and merged manifest | New US numbers; second folder; manifest drops QA `recommendation` |
 | T-SA-02 | Lists both paths and asks; no file written | Picks a folder |
+| T-SA-02b | Uses `note/2026-11-13-dispense/`; does not create `note/2026-11-17/` for the same topic | New dated folder that drops the prior chain |
 | T-SA-03 | `us_ids: []`; Source consult/as-built; no `US-n` invented | A fake story to "make the template happy" |
 | T-SA-04 | AC3 stays blocked on BA; allergy rule not designed as fact; `status` is `blocked` or `draft` | A hard-block rule with doses, sources, or statuses BA never wrote |
 | T-SA-05 | Refuses production code; offers to stay on the spec or write a prototype only if the user then asks | Handlers, SQL, or a server "as a starting point" |

@@ -70,12 +70,13 @@ Notes live at the **workspace root** (the folder that contains `Kio/` and `AGENT
 
 ### Resolve folder (do in order)
 
-1. If BA Brief has `Note folder:` → use that exact path
-2. Else search today under `<workspace-root>/note/` for `ba.brief.md` in `YYYY-MM-DD/` or `YYYY-MM-DD-*/`
-3. **Exactly one** match → use that folder
-4. **Multiple** matches → list paths and ask which folder (do not guess)
-5. **None** → use `note/YYYY-MM-DD/`; if this is clearly another topic, ask for `{suffix}` once
-6. Same topic → overwrite `sa.spec.md` in the resolved folder
+1. If the user names a folder, or a BA/Dev note for this work states `Note folder:` → use that path
+2. Else search `<workspace-root>/note/` for `ba.brief.md`, `sa.spec.md`, or `dev.impl.md` in any `YYYY-MM-DD/` or `YYYY-MM-DD-*/` (not only today)
+3. Prefer folders whose topic (folder suffix, frontmatter `topic`, or `manifest.topic`) matches this work. Prefer today's date when several match
+4. **One** matching folder → use it
+5. **Several** matches, or the only folder found is a different topic → list paths and ask. Do not guess. Do not write yet
+6. **None** → `note/YYYY-MM-DD/`; if the topic is unclear, ask for `{suffix}` once
+7. Same topic → overwrite `sa.spec.md` in the resolved folder
 
 `us_ids` in frontmatter and `manifest.json` must be the same set as the BA Brief when one exists. Preserve `bo_ids` and `br_ids` when the brief published them. Consults use `[]`. Do not drop or renumber IDs the brief already published. QA `recommendation` is not yours — preserve it when merging the manifest.
 
@@ -234,7 +235,8 @@ Scenarios and pass/fail expectations: `tests/scenarios.md`, `tests/expected-beha
 | ID | Expect |
 |----|--------|
 | T-SA-01 | BA present → Must ACs mapped; same note folder; `us_ids` match |
-| T-SA-02 | Multiple folders today → list + ask; no guess |
+| T-SA-02 | Several folders or wrong topic → list + ask; no guess |
+| T-SA-02b | Brief from an earlier day → reuse that folder |
 | T-SA-03 | Consult / เช็คระบบ → `us_ids: []`; no fake US-n |
 | T-SA-04 | Incomplete BA → blockers; no invented business rules |
 | T-SA-05 | Production code requested → refuse unless a prototype was requested |

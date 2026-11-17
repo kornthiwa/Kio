@@ -11,7 +11,8 @@ note/YYYY-MM-DD/
   manifest.json
 ```
 
-Multi-topic same day: `note/YYYY-MM-DD-{suffix}/`
+Multi-topic same day: `note/YYYY-MM-DD-{suffix}/`  
+Same topic on a later day: reuse the original folder (do not open a new dated folder that drops the chain). Resolve by topic match — not “exactly one folder today”.
 
 Install copies this folder to the project as `templates/note/` (schema + this README).
 

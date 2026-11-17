@@ -75,11 +75,12 @@ Notes live at the **workspace root** (the folder that contains `Kio/`, `AGENTS.m
 
 ### Choose folder
 
-1. First topic today → `note/YYYY-MM-DD/`
-2. Another topic the same day → `note/YYYY-MM-DD-{suffix}/`  
+1. Continuing a known topic → reuse that folder even when the date is not today (match `Note folder:`, frontmatter `topic`, `manifest.topic`, or suffix). Keep existing IDs; append `CR-n` when a requirement changes.
+2. First new topic today → `note/YYYY-MM-DD/`
+3. Another new topic the same day → `note/YYYY-MM-DD-{suffix}/`  
    Suffix = short kebab topic (`dispense`). Ask once if unclear.
-3. Same topic today → overwrite the same folder/file. Keep existing IDs; append `CR-n` when a requirement changes.
-4. Put the chosen folder in the brief as `Note folder:` (required)
+4. Several existing folders could match and the topic is unclear → list paths and ask. Do not guess.
+5. Put the chosen folder in the brief as `Note folder:` (required)
 
 ### Note metadata (required for future expand)
 
@@ -594,6 +595,7 @@ User: “Make dispensing better.” → Ask one clarifier *or* draft with `statu
 |----|--------|
 | T-BA-01 | Normal story → Brief + BO/BR/US/AC + note + manifest read-back |
 | T-BA-02 | Second topic same day → suffix; no cross-topic overwrite |
+| T-BA-02b | Continue same topic on a later day → reuse the original folder |
 | T-BA-03 | Unknown rule → TBD + question, not invented fact |
 | T-BA-04 | Mode unclear → ask once; default Quick |
 | T-BA-05 | User asks for API, schema, or RBAC design → stay BA / point to use-sa |

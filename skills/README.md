@@ -45,7 +45,8 @@ BA เป็นต้นทาง ID: `BO-n` → `BR-n` → `US-n` / `US-n-ACk` 
 `note/YYYY-MM-DD/{ba.brief.md|sa.spec.md|dev.impl.md|qa.status.md|manifest.json}`  
 (วันเดียวหลายงาน → `note/YYYY-MM-DD-{suffix}/`)
 
-BA ต้องประกาศ `Note folder` ใน brief; SA/Dev/QA ใช้โฟลเดอร์นั้น — ถ้ามีหลายโฟลเดอร์วันเดียวกันให้ถาม ห้ามเดา; ประกาศ path ก่อนเขียนไฟล์  
+BA ต้องประกาศ `Note folder` ใน brief; SA/Dev/QA ใช้โฟลเดอร์นั้นตาม **topic** ไม่ใช่แค่ “วันนี้มีใบเดียว” — หลายใบหรือคนละเรื่องให้ถาม ห้ามเดา; เรื่องเดิมข้ามวันให้ใช้โฟลเดอร์เดิม  
+ประกาศ path ก่อนเขียนไฟล์; QA อ่าน `dev.impl.md` เมื่อมี และเป็นเจ้าของวงจรสถานะบั๊ก (`verified` / `reopened` ฯลฯ)  
 ทุกไฟล์มี YAML frontmatter; แต่ละโฟลเดอร์มี `manifest.json` สำหรับสแกน/สรุป (schema อยู่ `templates/note/` — ติดตั้งไปที่โปรเจกต์ด้วย)  
 ตรวจสุขภาพ: `scripts/validate-notes.ps1` / `validate-notes.sh`
 
@@ -65,11 +66,11 @@ BA ต้องประกาศ `Note folder` ใน brief; SA/Dev/QA ใช�
 
 ทำให้เล็กที่สุดเท่าที่ครอบคลุม Must AC ที่ไม่ถูกบล็อก และสัญญาจาก SA แล้วบันทึกไฟล์ที่แตะ, ผลตรวจแยกประเภท, และจุดที่ต่างจากสเปก  
 รายละเอียดวิศวกรรมอยู่ใน `references/` — อ่านเฉพาะเมื่อเงื่อนไขใน skill ตรง ไม่โหลดทุกไฟล์  
-เปิดใช้เมื่อพูดถึง Dev, implement, เขียนโค้ด, ทำให้ หรือให้คิดแบบนักพัฒนา — ไม่เขียน user story, ไม่ได้ออกแบบระบบ, ไม่ตัดสิน ship
+เปิดใช้เมื่อพูดถึง Dev, /use-dev, หรือลงมือทำตาม BA/SA / AC — ไม่ใช้กับแก้โค้ดบรรทัดเดียวที่ไม่มีบริบท role, ไม่เขียน user story, ไม่ได้ออกแบบระบบ, ไม่ตัดสิน ship
 
 ### `use-qa` — ตอนคิดแบบ QA
 
-ไล่ AC→test, รายงาน bug พร้อม severity/priority แล้วให้คำแนะนำ Ship / No-ship  
+ไล่ AC→test, อ่าน Dev handoff เมื่อมี, รายงาน bug พร้อม severity/priority และ lifecycle แล้วให้คำแนะนำ Ship / No-ship  
 เปิดใช้เมื่อพูดถึง QA, test plan, test case, regression, bug report หรือให้คิดแบบ QA
 
 ### `summarize-notes` — ตอนสรุป / สแกน note

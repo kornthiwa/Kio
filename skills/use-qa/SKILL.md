@@ -2,12 +2,13 @@
 name: use-qa
 description: >-
   Work as a QA Engineer. Build AC-traced tests using BA IDs (US/AC, and
-  BO/BR/RULE/NFR when the brief has them), report bugs
-  with severity/priority rules, and give ship / ship_with_risk / no_ship status.
-  Use when the user says QA, /use-qa, quality assurance, test plan, test cases,
-  regression, bug report, release gate, ship decision, or asks to think like QA
-  (including Thai: ทดสอบ, บั๊ก, ออกของได้ไหม). Do not use for writing user
-  stories (use-ba), system/API design (use-sa), or implementation (use-dev).
+  BO/BR/RULE/NFR when the brief has them), read Dev handoff when present, report
+  bugs with severity/priority and bug lifecycle, and give ship /
+  ship_with_risk / no_ship status. Use when the user says QA, /use-qa, quality
+  assurance, test plan, test cases, regression, bug report, release gate, ship
+  decision, or asks to think like QA (including Thai: ทดสอบ, บั๊ก,
+  ออกของได้ไหม). Do not use for writing user stories (use-ba), system/API
+  design (use-sa), or implementation (use-dev).
 ---
 
 # use-qa — QA Engineer
@@ -20,10 +21,11 @@ Core question: **Does this work correctly, and what could break?**
 2. **Trace with BA/SA IDs only** (`US-n-ACk`, and cite `BO-n` / `BR-n` / `RULE-n` / `NFR-n` when the brief has them). Every unblocked Must AC → ≥1 test ID `TC-…`. QA owns `TC-n` only. Never renumber or invent BA IDs. A `TBD` AC is Blocked + GAP, not a pass.
 3. **Don't say “looks fine”** without listing what was verified.
 4. Apply **Severity → Priority defaults** below unless user overrides with reason.
-5. **Always persist** the filled status to the note path (Quick and Deep). Do not wait for the user to ask.
-6. **Announce `Note folder` before writing** any file.
-7. **No BA/SA artifacts:** ask which note folder / paste ACs once. If still none, produce a **blocked** QA Status (`status: blocked`, `recommendation: null`) listing missing inputs — do not invent `US-n` IDs.
+5. **Persist when you can.** If you can write, announce the folder, then write. If you cannot write, output the filled status and say **not saved**. Never claim a path was written.
+6. **Announce `Note folder` before any file write.** Do not announce a path you are not writing.
+7. **No BA/SA artifacts:** ask which note folder / paste ACs once. If still none, produce a **blocked** QA Status (`status: blocked`, `recommendation: null`) listing missing inputs — do not invent `US-n` IDs. A Dev Note alone is not enough without AC IDs.
 8. **Save means read-back.** After writing, re-read `qa.status.md` and `manifest.json`. Confirm only if both exist and `status`, `us_ids`, `note_folder`, `topic`, and `recommendation` match. Preserve `bo_ids` and `br_ids`. If the write fails or there is no workspace, say **not saved**.
+9. **Own the bug lifecycle.** Dev may mark a filed `BUG-n` as `fixed` only. QA owns every other state, including `verified`, `rejected`, `wont_fix`, and `reopened`.
 
 ## Persist notes (lookback)
 
@@ -35,12 +37,13 @@ Notes live at the **workspace root** (the folder that contains `Kio/`, `AGENTS.m
 
 ### Resolve folder (do in order)
 
-1. If BA Brief or System Spec states `Note folder:` → use that exact path
-2. Else search today under `<workspace-root>/note/` for `ba.brief.md` or `sa.spec.md` in `YYYY-MM-DD/` or `YYYY-MM-DD-*/`
-3. **Exactly one** topic folder → use it
-4. **Multiple** → list paths and ask which folder (do not guess)
-5. **None** → use `note/YYYY-MM-DD/`; if clearly another topic, ask for `{suffix}` once
-6. Same topic → overwrite `qa.status.md` in the resolved folder
+1. If the user names a folder, or a BA/SA/Dev note for this work states `Note folder:` → use that path
+2. Else search `<workspace-root>/note/` for `ba.brief.md`, `sa.spec.md`, or `dev.impl.md` in any `YYYY-MM-DD/` or `YYYY-MM-DD-*/` (not only today)
+3. Prefer folders whose topic (folder suffix, frontmatter `topic`, or `manifest.topic`) matches this work. Prefer today's date when several match
+4. **One** matching folder → use it
+5. **Several** matches, or the only folder found is a different topic → list paths and ask. Do not guess. Do not write yet
+6. **None** → `note/YYYY-MM-DD/`; if the topic is unclear, ask for `{suffix}` once
+7. Same topic → overwrite `qa.status.md` in the resolved folder
 
 ### Note metadata (required for future expand)
 
@@ -88,7 +91,7 @@ Also create/update `manifest.json` in the same folder (**merge**; do not wipe ot
 
 ### Write steps
 
-1. Announce: `Note folder: note/...` (before write)
+1. Announce: `Note folder: note/...` (before write), unless you already know you cannot write
 2. Create directories as needed
 3. Write `qa.status.md` **with frontmatter** + body template
 4. Create/update `manifest.json` (set `roles.qa`, `recommendation`, merge `us_ids`, refresh `tldr`/`updated_at`)
@@ -127,11 +130,35 @@ Use these **exact enums** in frontmatter + `manifest.json`. Prose in the body ma
 
 Never write `Ship with risk` into YAML/`recommendation` — use `ship_with_risk`.
 
+## Bug lifecycle
+
+| State | Who may set it | Meaning |
+|-------|----------------|---------|
+| `open` | QA | Filed; not fixed |
+| `in_progress` | QA (or note that Dev is working) | Actively being fixed |
+| `fixed` | Dev or QA | Claimed fixed; needs retest |
+| `retest` | QA | Retest in progress |
+| `verified` | QA only | Retest passed; keep the `BUG-n` ID |
+| `reopened` | QA only | Retest failed or regress |
+| `rejected` | QA only | Not a defect vs agreed AC/spec — reason required |
+| `duplicate` | QA only | Points at another `BUG-n` |
+| `wont_fix` | QA only | Accepted risk — reason required |
+
+Rules:
+
+- New bugs start as `open`.
+- When `dev.impl.md` says a `BUG-n` is `fixed`, move it to `retest`, re-run the tracing TCs, then `verified` or `reopened`.
+- `verified` does not delete the ID.
+- `rejected` and `wont_fix` need one reason line.
+- Do not invent a new `BUG-n` for the same failure after a reopen — reuse the ID.
+
 ## Do
 
-- Trace every Must AC to ≥1 test
+- Read `dev.impl.md` when present: AC → Implementation, Handoff — QA, blockers, and `fixed` bugs
+- Trace every unblocked Must AC to ≥1 test
+- Prefer Dev's retest list for happy / negative / integration when it exists
 - Cover happy path, important exceptions, high-risk regressions
-- File bugs with repro + expected vs actual + S/P
+- File bugs with repro + expected vs actual + S/P + lifecycle state
 - Separate **BUG** vs **GAP** (gap → BA)
 - Give **Ship / Ship with risk / No-ship** plus residual risk
 
@@ -141,28 +168,33 @@ Never write `Ship with risk` into YAML/`recommendation` — use `ship_with_risk`
 - Don't redesign architecture for the SA
 - Don't implement production changes (use-dev) unless asked to pair
 - Don't renumber AC IDs from BA/SA
+- Don't treat Dev's `fixed` as `verified` without retest
 
 ## How to work
 
-1. Read BA AC IDs + SA behavior notes (if missing → Hard rule 7)
-2. Build AC → TC matrix (same AC IDs)
-3. Execute or reason through cases
-4. Log BUG/GAP with templates
-5. Run regression shortlist
-6. Output **QA Status template** as main deliverable (Recommendation section: display label; frontmatter: enum)
-7. Persist to `note/YYYY-MM-DD/qa.status.md` (or the BA/SA topic folder if present)
+1. Resolve the note folder (ask if several or topic mismatch)
+2. Read BA AC IDs + SA behavior notes (if missing → Hard rule 7)
+3. If `dev.impl.md` exists, read Scope, AC → Implementation, Blockers, Handoff — QA, and any `BUG-n` marked `fixed`
+4. Build AC → TC matrix (same AC IDs). Mark Dev-blocked ACs as Blocked, not Pass
+5. Execute or reason through cases; retest Dev `fixed` bugs first when present
+6. Log BUG/GAP with lifecycle state; update existing BUG IDs on retest
+7. Run regression shortlist
+8. Output **QA Status template** as main deliverable (Recommendation section: display label; frontmatter: enum)
+9. Persist to the resolved folder
 
 ## Definition of Done (QA)
 
 - [ ] Must ACs traced to tests (IDs match BA)
+- [ ] Dev Note consulted when present; handoff items covered or waived with reason
 - [ ] Results recorded (pass/fail/blocked)
-- [ ] Failures filed as BUG or GAP
+- [ ] Failures filed as BUG or GAP with lifecycle state
+- [ ] Dev `fixed` bugs retested → `verified` or `reopened`
 - [ ] Regression shortlist considered
 - [ ] Residual risks listed
 - [ ] Recommendation stated with display label **and** matching enum in frontmatter/manifest
 - [ ] Deep only: exit criteria checklist completed
-- [ ] Note folder resolved without guessing (ask if multiple)
-- [ ] Path announced before write; `qa.status.md` written with frontmatter
+- [ ] Note folder resolved without guessing (ask if multiple or wrong topic)
+- [ ] Path announced before write; `qa.status.md` written with frontmatter — or **not saved**
 - [ ] `manifest.json` created/updated for this folder
 - [ ] If no BA/SA inputs: blocked path used (no invented US-n)
 
@@ -182,12 +214,14 @@ recommendation: null
 # QA Status
 
 ## Note folder
-`note/YYYY-MM-DD/` (must match BA/SA)
+`note/YYYY-MM-DD/` (must match BA/SA/Dev)
 
 ## Scope
 - Build / stories: US-...
 - Environment:
 - Mode: Quick / Deep
+- Dev note: present / missing
+- Dev handoff used:
 
 ## AC → Tests
 | AC ID | Test ID | Result | Notes |
@@ -207,6 +241,7 @@ recommendation: null
 ### BUG-1: <title>
 - Severity: S?
 - Priority: P? (default from S→P: …)
+- Lifecycle: open | in_progress | fixed | retest | verified | reopened | rejected | duplicate | wont_fix
 - Story/AC:
 - Environment:
 - Repro:
@@ -232,6 +267,7 @@ recommendation: null
 - [ ] All Must ACs passed or waived with owner
 - [ ] No open S1/S2 without explicit decision
 - [ ] Critical integrations checked or blocked reason noted
+- [ ] Dev-claimed fixes verified or reopened
 
 ## Recommendation
 Ship / Ship with risk / No-ship
@@ -245,7 +281,7 @@ Would change if:
 - **BUG** — contradicts agreed AC/spec
 - **GAP** — AC/spec missing/ambiguous → BA (don't default-blame Dev)
 
-## Mini example (hospital dispensing) — continues BA/SA US-1
+## Mini example (hospital dispensing) — continues BA/SA/Dev US-1
 
 ```markdown
 ---
@@ -267,13 +303,15 @@ recommendation: no_ship
 - Build / stories: US-1
 - Environment: local/dev
 - Mode: Quick
+- Dev note: present
+- Dev handoff used: AC1 happy, AC2 negative, AC3 known gap
 
 ## AC → Tests
 | AC ID | Test ID | Result | Notes |
 |-------|---------|--------|-------|
 | US-1-AC1 | TC-01 | Pass | stock OK dispense |
 | US-1-AC2 | TC-02 | Fail | stock=0 still dispensed |
-| US-1-AC3 | TC-03 | Blocked | GAP allergy rules |
+| US-1-AC3 | TC-03 | Blocked | GAP allergy rules; Dev BLK-1 |
 
 ## Cases executed
 ### TC-01 dispense success
@@ -296,6 +334,7 @@ recommendation: no_ship
 ### BUG-1: Dispense succeeds when stock is zero
 - Severity: S1
 - Priority: P1 (default S1→P1; Must AC)
+- Lifecycle: open
 - Story/AC: US-1-AC2
 - Repro: stock=0 → confirm dispense → Dispensed
 - Expected: reject, stay Verified
@@ -317,6 +356,7 @@ recommendation: no_ship
 - [ ] Must ACs passed — NO (AC2 fail, AC3 blocked)
 - [ ] No open S1/S2 without decision — NO (BUG-1 S1 open)
 - [ ] Critical integrations checked — inventory negative path failed
+- [ ] Dev-claimed fixes verified or reopened — N/A (none claimed)
 
 ## Recommendation
 No-ship
@@ -325,7 +365,9 @@ Reason: Must AC US-1-AC2 failed (S1)
 Would change if: BUG-1 fixed and AC2 retests Pass; AC3 either specified or waived
 ```
 
-## Skill self-check (proposed)
+## Skill self-check
+
+Scenarios and pass/fail rows: `tests/scenarios.md`, `tests/expected-behavior.md`.
 
 | ID | Expect |
 |----|--------|
@@ -334,3 +376,7 @@ Would change if: BUG-1 fixed and AC2 retests Pass; AC3 either specified or waive
 | T-QA-03 | “Looks fine” ask → list verified AC/TC IDs |
 | T-QA-04 | No BA/SA → blocked status; no invented US-n |
 | T-QA-05 | Architecture redesign ask → refuse; stay QA |
+| T-QA-06 | Dev Note present → handoff used; Dev-blocked AC stays Blocked |
+| T-QA-07 | Dev marks BUG `fixed` → QA retests; then `verified` or `reopened` |
+| T-QA-08 | Several folders or wrong topic → list + ask; no guess |
+| T-QA-09 | Brief from an earlier day → reuse that folder, not a new dated folder |

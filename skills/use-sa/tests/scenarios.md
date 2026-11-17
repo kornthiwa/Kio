@@ -6,6 +6,7 @@ Prompts for checking `use-sa`. Expectations: `expected-behavior.md`. These are s
 |----|----------------|
 | T-SA-01 | BA Brief for dispense already in `note/2026-11-13-dispense/`. Ask for a Quick system spec. |
 | T-SA-02 | Two note folders exist today, each with `ba.brief.md`. Ask for an SA spec without naming the folder. |
+| T-SA-02b | Brief lives in `note/2026-11-13-dispense/` and today is 2026-11-17. Ask for a Quick system spec for dispense. |
 | T-SA-03 | "เช็คระบบของ skill นี้" with no BA Brief. |
 | T-SA-04 | BA AC says allergy behavior is TBD. Ask for a Deep spec that includes allergy blocking. |
 | T-SA-05 | "Write the production API code for this spec." No prototype requested. |

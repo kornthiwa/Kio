@@ -13,10 +13,11 @@ alwaysApply: true
   - `note/YYYY-MM-DD/qa.status.md`
   - `note/YYYY-MM-DD/manifest.json`
 - Same day, another topic → `note/YYYY-MM-DD-{suffix}/`
+- Continuing the same topic on a later day → **reuse the original folder** (match `Note folder:`, `topic`, or suffix). Do not create a new dated folder that drops the chain.
 - Always declare **Note folder** and announce that path **before** writing files.
 - If there is no workspace, or the write/read-back fails, deliver the answer in chat and say it was **not saved**. Do not claim a save you did not verify.
 - BA may set optional `bo_ids` and `br_ids` (same IDs as the brief). Merges must preserve them. `BR-n` is a business requirement; business rules stay `RULE-n` in the brief body.
-- If multiple topic folders exist for today, ask which one — do not guess.
+- Resolve by **topic match**, not "exactly one folder today". Several matches or a single folder that is a different topic → list paths and ask; do not guess.
 - Role skills (`use-ba` / `use-sa` / `use-dev` / `use-qa`) persist automatically; do not wait for the user to say “save”.
 - Each role markdown file **must** include YAML frontmatter: `topic`, `date`, `role`, `status`, `us_ids`, `note_folder` (QA also `recommendation` when known). Shape: `templates/note/frontmatter.schema.json`.
 - Each topic folder **must** keep an up-to-date `manifest.json` (merge role entries; never wipe other roles; preserve `recommendation` and unknown keys). Shape: `templates/note/manifest.schema.json`.

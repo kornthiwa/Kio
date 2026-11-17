@@ -4,10 +4,11 @@ description: >-
   Work as a Developer. Implement the smallest change that satisfies unblocked
   BA IDs (US/AC, plus BO/BR/RULE/NFR when the brief has them) and the SA spec,
   then record files, verification, and deviations for QA.
-  Use when the user says Dev, Developer, /use-dev, implement, build this, code
-  this, or asks to think like a developer (including Thai: เขียนโค้ด, ทำให้,
-  ลงมือทำ). Do not use for user stories (use-ba), system/API design (use-sa),
-  or test plans/ship decisions (use-qa).
+  Use when the user says Dev, Developer, /use-dev, implement against BA/SA notes
+  or ACs, or asks to think like a developer (including Thai: เขียนโค้ดตาม AC,
+  ลงมือทำตามสเปก). Do not use for casual one-line edits with no role context,
+  user stories (use-ba), system/API design (use-sa), or test plans/ship
+  decisions (use-qa).
 ---
 
 # use-dev — Developer
@@ -63,12 +64,13 @@ Workspace root is the open project. If that folder contains `AGENTS.md` or `Kio/
 
 ### Resolve folder (do in order)
 
-1. If a Brief or Spec states `Note folder:` for this work → use that path
-2. Else search `<workspace-root>/note/` for `ba.brief.md` or `sa.spec.md` in `YYYY-MM-DD/` or `YYYY-MM-DD-*/`
-3. **One** folder today **and** its topic matches this work → use it
-4. **Several** folders, or one folder that is a different topic → list the paths and ask. Do not guess. Do not write yet
-5. **None** → `note/YYYY-MM-DD/`. If the topic is unclear, ask for `{suffix}` once
-6. Same topic → overwrite `dev.impl.md` in the resolved folder
+1. If the user names a folder, or a BA/SA note for this work states `Note folder:` → use that path
+2. Else search `<workspace-root>/note/` for `ba.brief.md`, `sa.spec.md`, or `dev.impl.md` in any `YYYY-MM-DD/` or `YYYY-MM-DD-*/` (not only today)
+3. Prefer folders whose topic (folder suffix, frontmatter `topic`, or `manifest.topic`) matches this work. Prefer today's date when several match
+4. **One** matching folder → use it
+5. **Several** matches, or the only folder found is a different topic → list paths and ask. Do not guess. Do not write yet
+6. **None** → `note/YYYY-MM-DD/`. If the topic is unclear, ask for `{suffix}` once
+7. Same topic → overwrite `dev.impl.md` in the resolved folder
 
 ### Note metadata
 
@@ -260,7 +262,7 @@ Status: Ready for test on <unblocked ACs> / Blocked (why)
 
 ## Mini example (hospital dispensing)
 
-AC3 is still a Must TBD, so the file stays `draft` even though AC1 and AC2 are in the code and the unit row passed.
+AC3 is **in this note's AC table** as a blocked Must TBD, so file `status` stays `draft` even though AC1 and AC2 passed verification. If the user had left AC3 outside this slice, it would be a known gap only and would not keep the file `draft`.
 
 ```markdown
 ---
@@ -275,10 +277,11 @@ note_folder: note/2026-11-13-dispense
 # Dev Note
 
 ## Scope
-- Stories: US-1 (BR-1, BR-2). BR-3 / US-1-AC3 not implemented
+- Stories: US-1 (BR-1, BR-2). BR-3 / US-1-AC3 listed in this slice as blocked
 - Mode: Quick
 - Intent: implement
 - Implementation: partial
+- File stays `draft`: US-1-AC3 is an in-scope Must TBD
 
 ## Repository
 - Stack: Python, pytest (from the repo)
@@ -330,12 +333,13 @@ Scenarios and pass/fail rows: `tests/scenarios.md`, `tests/expected-behavior.md`
 | T-DEV-04 | Brief vs spec → blocker; no silent choice |
 | T-DEV-05 | Ship ask → refuse; point to use-qa |
 | T-DEV-06 | Several folders or the wrong topic → list and ask |
+| T-DEV-06b | Brief from an earlier day → reuse that folder |
 | T-DEV-07 | Filed BUG → `fixed` only |
 | T-DEV-08 | Reuse the existing module; no duplicate helper |
 | T-DEV-09 | Dirty user hunks → stop; do not overwrite |
 | T-DEV-10 | Unpublished route → blocker to SA |
 | T-DEV-11 | Unpublished column drop → blocker unless the user accepts a `DEV-n` |
-| T-DEV-12 | Failing test stays; status not `ready` |
+| T-DEV-12 | Keep the failing test; not `ready` while still `fail`; after a real fix, re-run and record the new result |
 | T-DEV-13 | Checks not run → `draft` even if the code matches |
 | T-DEV-14 | Cannot write → template in the reply and **not saved** |
 | T-DEV-15 | Named change, no BA/SA → consult; `us_ids: []` |

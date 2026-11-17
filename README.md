@@ -25,7 +25,7 @@ note/YYYY-MM-DD/
   manifest.json    # machine index for future summary/search
 ```
 
-`use-ba` / `use-sa` / `use-dev` / `use-qa` เซฟ note เองเสมอที่ workspace root; หลายงานวันเดียวใช้ `note/YYYY-MM-DD-{suffix}/`  
+`use-ba` / `use-sa` / `use-dev` / `use-qa` เซฟ note เองเสมอที่ workspace root; หลายงานวันเดียวใช้ `note/YYYY-MM-DD-{suffix}/`; เรื่องเดิมข้ามวันใช้โฟลเดอร์เดิม (จับคู่ด้วย topic)  
 สัญญา note: `templates/note/` (ติดตั้งไปที่โปรเจกต์ด้วย) — ตรวจด้วย `scripts/validate-notes.*`
 
 ## ปลายทางตอนติดตั้ง
